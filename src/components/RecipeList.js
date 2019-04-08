@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
 import Recipe from './Recipe';
 import RecipeSearch from './RecipeSearch';
-import { recipe } from '../tempDetails';
-import { recipes } from '../tempList';
+
 export default class RecipeList extends Component {
 	render() {
-		const { recipes } = this.props;
+		const {
+			recipes,
+			handleDetails,
+			value,
+			handleChange,
+			handleSubmit,
+			error,
+		} = this.props;
 		return (
 			<React.Fragment>
-				<RecipeSearch />
+				<RecipeSearch
+					value={value}
+					handleChange={handleChange}
+					handleSubmit={handleSubmit}
+				/>
 				<div className="container my-5">
 					{/*title*/}
 					<div className="row">
@@ -18,9 +28,19 @@ export default class RecipeList extends Component {
 					{/*ends here*/}
 
 					<div className="row">
-						{recipes.map(recipe => {
-							return <Recipe key={recipe.recipe_id} recipe={recipe} />;
-						})}
+						{error ? ( //ternary operation for validation
+							<h1 className="text-danger text-center">{error}</h1>
+						) : (
+							recipes.map(recipe => {
+								return (
+									<Recipe
+										key={recipe.recipe_id}
+										recipe={recipe}
+										handleDetails={handleDetails}
+									/>
+								);
+							})
+						)}
 					</div>
 				</div>
 			</React.Fragment>

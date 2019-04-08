@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { recipe } from '../tempDetails';
 export default class RecipeDetails extends Component {
-	constructor(props) {
+	/*constructor(props) {
 		super(props);
+
 		this.state = {
 			recipe: recipe,
 			url: `https://www.food2fork.com/api/get?key=7ef52d43c9132a2fb47698f194f7f3d0&q&rId=${
@@ -10,6 +11,47 @@ export default class RecipeDetails extends Component {
 			} `,
 		};
 	}
+
+	//fetch diifrent items
+	//login to the account
+	async componentDidMount() {
+		try {
+			const data = await fetch(this.state.url);
+			const jsonData = await data.json();
+
+			this.setState({
+				recipe: jsonData.recipe,
+			});
+		} catch (error) {
+			console.log(error);
+		}
+	}*/
+
+	state = {
+		recipe: recipe,
+	};
+
+	async componentDidMount() {
+		const id = this.props.id;
+		const url = `https://www.food2fork.com/api/get?key=7ef52d43c9132a2fb47698f194f7f3d0&q&rId=${id}`;
+
+		try {
+			const data = await fetch(url);
+			// eslint-disable-next-line
+			const jsonData = await data.json();
+
+			this.setState(
+				(state, props) => {
+					//recipe: jsonData.recipe, not working
+					return { recipe: jsonData.recipe };
+				},
+				() => {},
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
 	render() {
 		const {
 			image_url,
@@ -19,12 +61,19 @@ export default class RecipeDetails extends Component {
 			title,
 			ingredients,
 		} = this.state.recipe;
+
+		const { handleIndex } = this.props;
 		return (
 			<React.Fragment>
 				<div className="container">
 					<div className="row">
 						<div className="col-10 mx-auto col-md-6 my-3">
-							<button className="btn btn-warning mb-5 text-capitalize">
+							<button
+								className="btn btn-warning mb-5 text-capitalize"
+								onClick={() => {
+									handleIndex(1); //returns to home page
+								}}
+							>
 								back to recipe list
 							</button>
 							<img src={image_url} alt="recipe" className="d-block w-100" />
@@ -40,7 +89,15 @@ export default class RecipeDetails extends Component {
 								href={publisher_url}
 								target="_blank"
 								rel="noopener noreferrer"
-								className="btn btn-success mt-2 text-capitalize"
+								className="btn btn-primary mt-2 text-capitalize"
+							>
+								publisher webpage
+							</a>
+							<a
+								href={source_url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="btn btn-success mt-2 mx-3 text-capitalize"
 							>
 								recipe url
 							</a>
